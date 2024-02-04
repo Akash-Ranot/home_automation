@@ -1,35 +1,62 @@
- Include necessary libraries
-#include SoftwareSerial.h
-
- Define relay pin
-const int relayPin = 7;
-
- Define software serial pins for Bluetooth module
-SoftwareSerial bluetooth(2, 3);  RX, TX
+//using ports 10, 11, 12, 13
+int relay1=10;
+int relay2=11;
+int relay3=12;
+int relay4=13;
+int val;
 
 void setup() {
-   Set relay pin as an output
-  pinMode(relayPin, OUTPUT);
-  
-   Start serial communication with a baud rate of 9600 for debugging
+ 
   Serial.begin(9600);
-  
-   Start Bluetooth communication with a baud rate of 9600
-  bluetooth.begin(9600);
-}
+  pinMode(relay1,OUTPUT);
+  pinMode(relay2,OUTPUT);
+  pinMode(relay3,OUTPUT);
+  pinMode(relay4,OUTPUT);
+  digitalWrite(relay1,HIGH);
+  digitalWrite(relay2,HIGH);
+  digitalWrite(relay3,HIGH);
+  digitalWrite(relay4,HIGH);
 
+}
 void loop() {
-   Check if data is available from Bluetooth module
-  if (bluetooth.available()  0) {
-    char command = bluetooth.read();  Read the incoming command
+ 
+  //check data serial from bluetooth android App
+  while (Serial.available() > 0){
+    val = Serial.read();
+    Serial.println(val);
+  }
+ 
+  //Relay is on
+  if( val == 1 ) {
+    digitalWrite(relay1,HIGH); }
+  else if( val == 2 ) {
+    digitalWrite(relay2,HIGH); }  else if( val == 3 ) {
+    digitalWrite(relay3,HIGH); }
+  else if( val == 4 ) {
+    digitalWrite(relay4,HIGH); }
     
-     Process the received command
-    if (command == '1') {
-      digitalWrite(relayPin, HIGH);  Turn on the device (e.g., light)
-      Serial.println(Device turned ON);
-    } else if (command == '0') {
-      digitalWrite(relayPin, LOW);  Turn off the device
-      Serial.println(Device turned OFF);
-    }
+  //relay all on
+  else if( val == 0 ) {
+    digitalWrite(relay1,HIGH);
+    digitalWrite(relay2,HIGH);
+    digitalWrite(relay3,HIGH);
+    digitalWrite(relay4,HIGH);
+  }
+  //relay is off
+  else if( val == 5 ) {
+    digitalWrite(relay1,LOW); }
+  else if( val == 6 ) {
+    digitalWrite(relay2,LOW); }
+  else if( val == 7 ) {
+    digitalWrite(relay3,LOW); }
+  else if( val == 8 ) {
+    digitalWrite(relay4,LOW); }
+    
+  //relay all off
+  else if( val == 10 ) {
+    digitalWrite(relay1,LOW);
+    digitalWrite(relay2,LOW);
+    digitalWrite(relay3,LOW);
+    digitalWrite(relay4,LOW);
   }
 }
